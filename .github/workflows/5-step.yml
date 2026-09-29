@@ -12,6 +12,10 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: step-5-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 env:
   REVIEW_FILE: ".github/steps/x-review.md"
 
@@ -32,6 +36,7 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
+      milestones-passed: ${{ steps.check-milestones.outcome == 'success' }}
       reflection-passed: ${{ steps.check-reflection.outcome == 'success' }}
       tests-passed: ${{ steps.check-tests.outcome == 'success' }}
     env:
@@ -54,6 +59,14 @@ jobs:
         id: check-reflection
         continue-on-error: true
         run: python .github/grading/check_pr_body.py
+
+      - name: Recheck all learner milestones
+        id: check-milestones
+        continue-on-error: true
+        run: |
+          python .github/grading/check_notes.py
+          python .github/grading/check_tests.py focused
+          python .github/grading/check_tests.py edges
 
       - name: Run complete test suite
         id: check-tests
@@ -104,6 +117,8 @@ jobs:
           vars: |
             step_number: 5
             results_table:
+              - description: "Investigation notes and all required focused and edge tests are still present and meaningful"
+                passed: ${{ needs.check_step_work.outputs.milestones-passed == 'true' }}
               - description: "Pull request documents test evidence and a critically reviewed Copilot suggestion"
                 passed: ${{ needs.check_step_work.outputs.reflection-passed == 'true' }}
               - description: "Visible and additional tests pass on the pull request"
@@ -114,6 +129,7 @@ jobs:
 
       - name: Stop if checks failed
         if: |
+          needs.check_step_work.outputs.milestones-passed != 'true' ||
           needs.check_step_work.outputs.reflection-passed != 'true' ||
           needs.check_step_work.outputs.tests-passed != 'true'
         run: exit 1
