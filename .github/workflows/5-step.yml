@@ -17,6 +17,7 @@ env:
 
 jobs:
   find_exercise:
+    if: ${{ !github.event.repository.is_template }}
     name: Find Exercise Issue
     uses: skills/exercise-toolkit/.github/workflows/find-exercise-issue.yml@v0.9.3
     permissions:
@@ -24,6 +25,7 @@ jobs:
       issues: read
 
   check_step_work:
+    if: ${{ !github.event.repository.is_template }}
     name: Check step work
     runs-on: ubuntu-latest
     permissions:
