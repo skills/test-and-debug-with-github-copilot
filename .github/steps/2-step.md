@@ -8,15 +8,18 @@ Tests generated from vague prompts often mirror the implementation instead of ch
 
 ### ⌨️ Activity: Add two focused unit tests
 
-![Codespaces editor showing the two focused bill splitter tests, their passing terminal result, and the exact behavior contract in Copilot Chat](../images/activity-focused-tests.png)
-
 1. In the **Codespace editor**, open `tests/test_bill_splitter.py`.
 
-1. In **Copilot Chat**, provide this behavior contract and ask for two pytest tests:
+1. In **Copilot Chat**, paste this prompt:
 
-   - `test_even_split`: splitting `$42.00` among 3 people returns three `Decimal("14.00")` shares.
-   - `test_tip_is_included`: splitting `$80.00` among 4 people with a 25% tip returns four `Decimal("25.00")` shares.
-   - Use the public `split_bill` function. Do not duplicate its calculation in the test.
+   ```text
+   Before editing, explain your assumptions about the split_bill API and these expected results. Then add exactly two pytest tests to tests/test_bill_splitter.py:
+
+   - test_even_split: split_bill("42.00", 3) returns three Decimal("14.00") shares.
+   - test_tip_is_included: split_bill("80.00", 4, 25) returns four Decimal("25.00") shares.
+
+   Use Decimal from Python's decimal module and the public split_bill function. Assert each complete returned list with explicit expected values; do not duplicate the production calculation. Do not change production code.
+   ```
 
 1. In the **Codespace editor**, inspect Copilot's proposed tests before accepting them. Confirm that each test has one clear reason to fail and asserts the complete returned list.
 
