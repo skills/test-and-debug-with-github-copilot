@@ -8,8 +8,6 @@ Tests generated from vague prompts often mirror the implementation instead of ch
 
 ### ⌨️ Activity: Add two focused unit tests
 
-![Codespaces editor showing the starter bill splitter tests, the seven-test baseline result, and a focused test-writing prompt in Copilot Chat](../images/activity-focused-tests.png)
-
 1. In the **Codespace editor**, open `tests/test_bill_splitter.py`.
 
 1. In **Copilot Chat**, paste this prompt:
